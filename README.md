@@ -425,9 +425,9 @@ cd Shuffle && sudo docker-compose up -d
 
 | Service | URL | Default Credentials |
 |---------|-----|-------------------|
-| 🛡️ **Wazuh Dashboard** | `https://VM1_IP` | admin/admin |
-| 🔍 **TheHive Interface** | `http://VM1_IP:9000` | admin/secret |
-| ⚡ **Shuffle Platform** | `http://VM2_IP:3001` | admin/password |
+| 🛡️ **Wazuh Dashboard** | `https://VM1_IP` | admin/password will be shown on installation screen on terminal |
+| 🔍 **TheHive Interface** | `http://VM1_IP:9000` | admin@thehive.local/secret |
+| ⚡ **Shuffle Platform** | `http://VM2_IP:3001` | Create a New Account |
 
 ### **Testing the Pipeline**
 
