@@ -249,6 +249,10 @@ Create automation workflow:
 
 ### **3. Discord Integration** 💬
 
+Create a Discord Webhook**  
+1. Go to your **Discord Server** → **Settings** → **Integrations** → **Webhooks**  
+2. Click **New Webhook** → Name it **Security Alert**   
+
 ```python
 # Discord Webhook Configuration
 DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_TOKEN"
