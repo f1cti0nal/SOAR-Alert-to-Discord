@@ -124,22 +124,49 @@ sudo systemctl start wazuh-manager
 
 Step-by-Step Guide: https://docs.strangebee.com/thehive/installation/step-by-step-installation-guide/
 
-```bash
-# Install dependencies
-sudo apt install apt-transport-https gnupg software-properties-common
+1. **Install Dependencies:**
+   ```bash
+   apt install wget gnupg apt-transport-https git ca-certificates ca-certificates-java curl  software-properties-common python3-pip lsb-release
+   ```
 
-# Add TheHive repository
-wget -qO- https://raw.githubusercontent.com/TheHive-Project/TheHive/master/PGP-PUBLIC-KEY | sudo apt-key add -
-echo 'deb https://deb.thehive-project.org release main' | sudo tee -a /etc/apt/sources.list.d/thehive-project.list
+2. **Install Java:**
+   ```bash
+   wget -qO- https://apt.corretto.aws/corretto.key | sudo gpg --dearmor  -o /usr/share/keyrings/corretto.gpg
+   echo "deb [signed-by=/usr/share/keyrings/corretto.gpg] https://apt.corretto.aws stable main" |  sudo tee -a /etc/apt/sources.list.d/corretto.sources.list
+   sudo apt update
+   sudo apt install java-common java-11-amazon-corretto-jdk
+   echo JAVA_HOME="/usr/lib/jvm/java-11-amazon-corretto" | sudo tee -a /etc/environment 
+   export JAVA_HOME="/usr/lib/jvm/java-11-amazon-corretto"
+   ```
 
-# Install TheHive
-sudo apt update
-sudo apt install thehive4
+3. **Install Cassandra:**
+   ```bash
+   wget -qO -  https://downloads.apache.org/cassandra/KEYS | sudo gpg --dearmor  -o /usr/share/keyrings/cassandra-archive.gpg
+   echo "deb [signed-by=/usr/share/keyrings/cassandra-archive.gpg] https://debian.cassandra.apache.org 40x main" |  sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+   sudo apt update
+   sudo apt install cassandra
+   ```
 
-# Configure and start
-sudo systemctl enable thehive
-sudo systemctl start thehive
-```
+4. **Install ElasticSearch:**
+   ```bash
+   wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch |  sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
+   sudo apt-get install apt-transport-https
+   echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main" |  sudo tee /etc/apt/sources.list.d/elastic-7.x.list
+   sudo apt update
+   sudo apt install elasticsearch
+   ```
+
+5. **Install TheHive:**
+   ```bash
+   wget -O- https://archives.strangebee.com/keys/strangebee.gpg | sudo gpg --dearmor -o /usr/share/keyrings/strangebee-archive-keyring.gpg
+   echo 'deb [signed-by=/usr/share/keyrings/strangebee-archive-keyring.gpg] https://deb.strangebee.com thehive-5.2 main' | sudo tee -a /etc/apt/sources.list.d/strangebee.list
+   sudo apt-get update
+   sudo apt-get install -y thehive
+   ```
+
+6. **Default Credentials for TheHive:**
+   - **Port:** 9000
+   - **Credentials:** 'admin@thehive.local' with a password of 'secret'
 
 ### **Step 2: VM 2 Setup (Shuffle SOAR)**
 
