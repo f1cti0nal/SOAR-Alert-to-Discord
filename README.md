@@ -100,7 +100,9 @@ This project implements a comprehensive **Security Orchestration, Automation and
 
 ### **Step 1: VM 1 Setup (Wazuh + TheHive)**
 
-#### 🛡️ **Install Wazuh SIEM** Quick Install: https://documentation.wazuh.com/current/quickstart.html
+#### 🛡️ **Install Wazuh SIEM**
+
+One CLick Install: https://documentation.wazuh.com/current/quickstart.html
 
 ```bash
 # Update system
@@ -119,6 +121,8 @@ sudo systemctl start wazuh-manager
 ```
 
 #### 🔍 **Install TheHive**
+
+Step-by-Step Guide: https://docs.strangebee.com/thehive/installation/step-by-step-installation-guide/
 
 ```bash
 # Install dependencies
@@ -140,6 +144,7 @@ sudo systemctl start thehive
 ### **Step 2: VM 2 Setup (Shuffle SOAR)**
 
 #### ⚡ **Install Shuffle**
+INstallation Guide: https://shuffler.io/docs/configuration
 
 ```bash
 # Install Docker & Docker Compose
