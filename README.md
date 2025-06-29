@@ -119,6 +119,7 @@ sudo bash wazuh-install.sh -a
 sudo systemctl enable wazuh-manager
 sudo systemctl start wazuh-manager
 ```
+![Screenshot 2025-06-29 163038](https://github.com/user-attachments/assets/98a84111-63b4-464c-be12-0c1442c6fe28)
 
 #### 🔍 **Install TheHive**
 
@@ -168,6 +169,9 @@ Step-by-Step Guide: https://docs.strangebee.com/thehive/installation/step-by-ste
    - **Port:** 9000
    - **Credentials:** 'admin@thehive.local' with a password of 'secret'
 
+![Screenshot 2025-06-29 163053](https://github.com/user-attachments/assets/cad0a720-0cf9-4cd1-9ffd-054154b81532)
+
+
 ### **Step 2: VM 2 Setup (Shuffle SOAR)**
 
 #### ⚡ **Install Shuffle**
@@ -193,6 +197,9 @@ sudo docker-compose up -d
 
 # Access Shuffle at http://VM2_IP:3001
 ```
+
+![Screenshot 2025-06-29 163008](https://github.com/user-attachments/assets/b2bd1f67-cebe-4c68-b6eb-b2048625f50f)
+
 
 ---
 
@@ -267,6 +274,9 @@ alert_message = {
 }
 ```
 
+![Screenshot 2025-06-29 162950](https://github.com/user-attachments/assets/afe1785d-11e6-4bfe-8b5b-198296b744c6)
+
+
 ---
 
 ## 🔧 **API Integrations**
@@ -284,6 +294,117 @@ export VT_API_KEY="your_virustotal_api_key"
 # Get API key from https://www.abuseipdb.com/account/api
 export ABUSEIPDB_API_KEY="your_abuseipdb_api_key"
 ```
+
+---
+## Configuration for TheHive
+
+### Configure Cassandra
+
+1. **Edit Cassandra Config File:**
+   ```bash
+   nano /etc/cassandra/cassandra.yaml
+   ```
+
+2. **Change Cluster Name:**
+   ```yaml
+   cluster_name: 'SOAR-Flow'
+   ```
+
+3. **Update Listen Address:**
+   ```yaml
+   listen_address: <public IP of TheHive>
+   ```
+
+4. **Update RPC Address:**
+   ```yaml
+   rpc_address: <public IP of TheHive>
+   ```
+
+5. **Update Seed Provider:**
+   ```yaml
+   - seeds: "<Public IP Of the TheHive>:7000"
+   ```
+
+6. **Stop Cassandra Service:**
+   ```bash
+   systemctl stop cassandra.service
+   ```
+
+7. **Remove Old Files:**
+   ```bash
+   rm -rf /var/lib/cassandra/*
+   ```
+
+8. **Restart Cassandra Service:**
+   ```bash
+   systemctl start cassandra.service
+   ```
+
+### Configure ElasticSearch
+
+1. **Edit ElasticSearch Config File:**
+   ```bash
+   nano /etc/elasticsearch/elasticsearch.yml
+   ```
+
+2. **Update Cluster Name and Host:**
+   ```yaml
+   cluster.name: thehive
+   node.name: node-1
+   network.host: <Public IP of your TheHive instance>
+   http.port: 9200
+   discovery.seed_hosts: ["127.0.0.1"]
+   cluster.initial_master_nodes: ["node-1"]
+   ```
+
+3. **Start ElasticSearch Service:**
+   ```bash
+   systemctl start elasticsearch
+   systemctl enable elasticsearch
+   systemctl status elasticsearch
+   ```
+
+## Configure TheHive
+
+1. **Ensure Proper Ownership:**
+   ```bash
+   ls -la /opt/thp
+   chown -R thehive:thehive /opt/thp
+   ```
+
+2. **Edit TheHive Configuration File:**
+   ```bash
+   nano /etc/thehive/application.conf
+   ```
+
+3. **Update Database and Index Configuration:**
+   ```conf
+   db.janusgraph {
+     storage {
+       backend = cql
+       hostname = ["<Public IP of TheHive>"]
+       cql {
+         cluster-name = SOAR-Flow
+         keyspace = thehive
+       }
+     }
+   }
+
+   index.search {
+     backend = elasticsearch
+     hostname = ["<Public IP of TheHive>"]
+     index-name = thehive
+   }
+
+   application.baseUrl = "http://<Public IP of TheHive>:9000"
+   ```
+
+4. **Start TheHive Services:**
+   ```bash
+   systemctl start thehive
+   systemctl enable thehive
+   systemctl status thehive
+   ```
 
 ---
 
